@@ -1,10 +1,12 @@
 <?php
 namespace API\v1;
 
+use API\v1\Controllers\HealthcheckController;
+use HYKY\Api;
+use HYKY\Core\BaseController;
 use HYKY\Core\ResponseTemplate;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Http\Response;
-use HYKY\Api;
 
 /**
  * Services : API\v1\RouteHandler
@@ -16,7 +18,7 @@ use HYKY\Api;
  * @copyright   2018 HYKY team
  * @since       0.0.1
  */
-class RouteHandler 
+class RouteHandler implements BaseController 
 {
     /**
      * RouteHandler constructor
@@ -43,12 +45,14 @@ class RouteHandler
 
             // API v1
             $app->group("/v1", function () use ($app, $ctrl) {
+                // Set all routes below
+                new HealthcheckController($app);
             });
         });
     }
 
     /**
-     * Handles request to the API's root address.
+     * Base method, equals to the index, or base path, for the route.
      *
      * @param Request $request 
      * @param Response $response
@@ -88,11 +92,15 @@ class RouteHandler
         Response $response, 
         array $args
     ) {
+        // Set address
+        $addr = (isset($_SERVER['SERVER_ADDR'])) 
+            ? $_SERVER['SERVER_ADDR'] : '::1';
+
         // Build response object
         $res = new ResponseTemplate(
             200, 
             [
-                'name' => Api::API_NAME.' @ '.$_SERVER['SERVER_ADDR'], 
+                'name' => Api::API_NAME.' @ '.$addr, 
                 'version' => Api::API_VERSION
             ], 
             true

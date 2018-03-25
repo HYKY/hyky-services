@@ -13,7 +13,10 @@
   }, 
   "autoload": {
     "psr-4": {
-      "": "src/"
+      "": [
+        "src/", 
+        "tests/"
+      ]
     }, 
     "files": [
       "src/hyky/config/constants.php"

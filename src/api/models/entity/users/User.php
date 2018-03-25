@@ -1,8 +1,6 @@
 <?php
 namespace API\Models\Entity\Users;
 
-use HYKY\Core\BaseEntity;
-use HYKY\Core\Salt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
@@ -14,6 +12,8 @@ use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
+use HYKY\Core\BaseEntity;
+use HYKY\Core\Salt;
 
 /**
  * Services : API\Models\Entity\Users\User
@@ -58,8 +58,33 @@ class User extends BaseEntity
      */
     protected $email;
 
+    /**
+     * If this user's profile is public or not.
+     *
+     * @var bool 
+     * @Column(type="boolean",nullable=false)
+     */
+    protected $is_public = true;
+
     // Relationships
     // ------------------------------------------------------------------
+    
+    /**
+     * Attributes assigned to this user.
+     *
+     * @var Collection
+     * @OneToMany(targetEntity="API\Models\Entity\Users\UserAttribute",mappedBy="user")
+     */
+    protected $attributes;
+    
+    /**
+     * User role.
+     *
+     * @var UserRole
+     * @ManyToOne(targetEntity="API\Models\Entity\Users\UserRole",inversedBy="users")
+     * @JoinColumn(name="role_id",referencedColumnName="id")
+     */
+    protected $role;
 
     // Constructor
     // ------------------------------------------------------------------
@@ -69,6 +94,8 @@ class User extends BaseEntity
      */
     public function __construct() 
     {
+        // Set collections
+        $this->attributes = new ArrayCollection();
     }
     
     // Getters
@@ -102,6 +129,16 @@ class User extends BaseEntity
     public function getEmail(): string 
     {
         return $this->email;
+    }
+
+    /**
+     * Returns the public profile status.
+     *
+     * @return bool
+     */
+    public function getIsPublic(): bool 
+    {
+        return $this->is_public;
     }
 
     /**
@@ -171,6 +208,58 @@ class User extends BaseEntity
         return $this;
     }
 
+    /**
+     * Updates public visibility status.
+     *
+     * @param boolean $is_public 
+     * @return $this
+     */
+    public function setIsPublic(bool $is_public) 
+    {
+        $this->is_public = $is_public;
+        return $this;
+    }
+    
+    /**
+     * Sets the user role associated with the user.
+     *
+     * @param UserRole $role
+     * @return $this
+     */
+    public function setRole(UserRole $role)
+    {
+        $this->role = $role;
+        return $this;
+    }
+
     // Collection Managers
     // ------------------------------------------------------------------
+
+    /**
+     * Adds an attribute to the user's collection.
+     *
+     * @param UserAttribute $attribute 
+     * @return $this
+     */
+    public function addAttribute(UserAttribute $attribute) 
+    {
+        $this->attributes[] = $attribute;
+        return $this;
+    }
+
+    /**
+     * Removes a user attribute from the collection.
+     *
+     * @param string $attr_name
+     * @return $this
+     */
+    public function removeAttribute(string $attr_name) 
+    {
+        foreach ($this->attributes as $attr) {
+            if ($attr->getName() === $attr_name) {
+                $this->attributes->removeElement($attribute);
+            }
+        }
+        return $this;
+    }
 }

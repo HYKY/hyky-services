@@ -78,15 +78,20 @@ class ClientInformation extends Mappable
      */
     public function __construct(bool $with_date = false)
     {
-        $this->http_user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $this->http_connection = $_SERVER['HTTP_CONNECTION'];
-        $this->http_host = $_SERVER['HTTP_HOST'];
+        $this->http_user_agent = (isset($_SERVER['HTTP_USER_AGENT']))
+            ? $_SERVER['HTTP_USER_AGENT'] : null;
+        $this->http_connection = (isset($_SERVER['HTTP_CONNECTION']))
+            ? $_SERVER['HTTP_CONNECTION'] : null;
+        $this->http_host = (isset($_SERVER['HTTP_HOST']))
+            ? $_SERVER['HTTP_HOST'] : null;
         $this->http_referer = (isset($_SERVER['HTTP_REFERER']))
             ? $_SERVER['HTTP_REFERER'] : null;
-        $this->remote_addr = $_SERVER['REMOTE_ADDR'];
+        $this->remote_addr = (isset($_SERVER['REMOTE_ADDR']))
+            ? $_SERVER['REMOTE_ADDR'] : null;
         $this->remote_host = (isset($_SERVER['REMOTE_HOST']))
             ? $_SERVER['REMOTE_HOST'] : null;
-        $this->request_method = $_SERVER['REQUEST_METHOD'];
+        $this->request_method = (isset($_SERVER['REQUEST_METHOD']))
+            ? $_SERVER['REQUEST_METHOD'] : null;
         $this->request_uri = (isset($_SERVER['REQUEST_URI']))
             ? $_SERVER['REQUEST_URI'] : null;
         if ($with_date === true) $this->date = date('c');

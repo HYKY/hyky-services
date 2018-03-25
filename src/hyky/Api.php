@@ -13,6 +13,7 @@ use HYKY\Core\ResponseTemplate;
 use HYKY\Core\Salt;
 use HYKY\Core\Utilities;
 use Monolog\Handler\FingersCrossedHandler;
+use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr7Middlewares\Middleware\TrailingSlash;
@@ -377,10 +378,14 @@ class Api
                     true
                 );
 
+                // Get user address
+                $addr = (isset($_SERVER['REMOTE_ADDR'])) 
+                    ? $_SERVER['REMOTE_ADDR'] : '::1';
+                
                 // Log
                 $logger = $container['logger'];
                 $logger->info(
-                    'User @ '.$_SERVER['REMOTE_ADDR'].' reached a '.$code, 
+                    'User @ '.$addr.' reached a '.$code, 
                     (new ClientInformation())->toArray()
                 );
                 $logger->info(

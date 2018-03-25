@@ -2,7 +2,7 @@
 namespace API\v1;
 
 /**
- * Services : API\v1\Routesi
+ * Services : API\v1\Routes
  * ----------------------------------------------------------------------
  * Loads API paths for the `JwtAuthentication` middleware from the data in 
  * `routes.json` file, located in the `\data` folder.
@@ -34,7 +34,7 @@ class Routes
     public function __construct() 
     {
         // File
-        $file = API_DATA_DIR.'\\routes.json';
+        $file = API_DATA_DIR."\\routes.json";
 
         // Get contents and set JSON
         $data = json_decode(

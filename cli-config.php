@@ -1,6 +1,6 @@
 <?php
-use HYKY\Api;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use HYKY\Api;
 
 /**
  * Services : CLI Config (Doctrine)
