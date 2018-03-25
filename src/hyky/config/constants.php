@@ -32,6 +32,39 @@ define('API_ROOT', dirname(dirname(dirname(__DIR__))));
  */
 define('API_SOURCE', API_ROOT."\\src");
 
+/**
+ * Data storage for the project.
+ * 
+ * This folder stores SQLite databases and some other data. It should not 
+ * be used to store uploaded files and images though. These should go into 
+ * the `public\` folder for now.
+ * 
+ * @var string
+ */
+define('API_DATA_DIR', API_ROOT."\\data");
+if (!is_dir(API_DATA_DIR)) mkdir(API_DATA_DIR);
+
+/**
+ * Public folder, where the `index.php` file and `.htaccess` file should be 
+ * placed.
+ * 
+ * It's also the place where file uploads and other publicly available files 
+ * should be stored.
+ * 
+ * @var string
+ */
+define('API_PUBLIC_DIR', API_ROOT."\\public");
+if (!is_dir(API_PUBLIC_DIR)) mkdir(API_PUBLIC_DIR);
+
+/**
+ * File upload folder. Publicly available files sent through the API 
+ * should be kept/stored in this folder for now.
+ * 
+ * @var string
+ */
+define('API_UPLOAD_DIR', API_PUBLIC_DIR."\\upload");
+if (!is_dir(API_UPLOAD_DIR)) mkdir(API_UPLOAD_DIR);
+
 // API flags
 // ----------------------------------------------------------------------
 
@@ -48,3 +81,10 @@ define('API_DEV_LOGS', true);
  * @var bool
  */
 define('API_DEV_MODE', true);
+
+/**
+ * Turns HTTPS on and off.
+ * 
+ * @var bool
+ */
+define('API_SECURE_MODE', false);

@@ -56,8 +56,8 @@ class Salt
      */
     private static function path(): string 
     {
-        $path = (defined('API_ROOT')) 
-            ? API_ROOT.'\data' : dirname(dirname(dirname(__DIR__))).'\data';
+        $path = (defined('API_DATA_DIR')) 
+            ? API_DATA_DIR : dirname(dirname(dirname(__DIR__)))."\\data";
         if (!is_dir($path)) mkdir($path);
         return $path;
     }

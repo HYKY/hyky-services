@@ -4,9 +4,16 @@
 .vscode/
 review/
 vendor/
+**/upload/
 
 # FILES TO IGNORE
 # -------------------------------------------------------------------- #
+**/*.dblite
+**/*.sqlite
+**/*.sql
 **/.env
+**/__SALT
+**/__SALT.001
+**/__SALT.002
 **/composer.lock
 **/package-lock.json

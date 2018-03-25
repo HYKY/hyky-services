@@ -45,9 +45,17 @@ These are the development dependencies (not really used):
 
 -----
 
-## How To
+## How To Run
 
-_Coming up in the next episode!_
+#### TL;DR
+- Clone;
+- Run `composer install`;
+- Copy `.env.example` into `.env` and set all the data to your current setup;
+- Run `schema-update.bat` (windows) or `php vendor\bin\doctrine orm-schema-tool:update --force` (linux);
+  - _You should do this every time you change something in the `api\model\entity` folder;
+- Serve the contents of the `public` folder;
+
+_More and better instructions coming up in the next episode!_
 
 -----
 

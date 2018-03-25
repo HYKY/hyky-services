@@ -16,7 +16,7 @@
       "": "src/"
     }, 
     "files": [
-      "src/api/config/constants.php"
+      "src/hyky/config/constants.php"
     ]
   }, 
   "require-dev": {
