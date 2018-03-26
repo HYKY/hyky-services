@@ -107,7 +107,7 @@ class Api
         // --------------------------------------------------------------
 
         // Load environment variables from the `.env` file in `API_ROOT`
-        $dotenv = (new Dotenv(API_ROOT))->load();
+        (new Dotenv(API_ROOT))->load();
 
         // Set container settings
         $config = [
@@ -121,7 +121,7 @@ class Api
         try {
             $this->container = new Container($config);
             $this->dependencies();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->errorHandleOnStart($e, 'Dependency container error.');
         }
 
