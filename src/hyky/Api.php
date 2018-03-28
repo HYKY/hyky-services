@@ -199,9 +199,9 @@ class Api
                 // Security salt
                 "secret" => Salt::get(), 
                 // API path to check for authentication
-                "path" => $routes->getPath(),
+                "path" => $routes->getPaths(),
                 // API paths to passthrough
-                "passthrough" => $routes->getPassthrough(), 
+                "passthrough" => $routes->getPassthroughs(),
                 "regexp" => "/(.*)/", 
                 "header" => "X-Token", 
                 "realm" => "Protected",

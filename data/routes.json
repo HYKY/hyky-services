@@ -1,8 +1,8 @@
 {
-  "path": [
+  "paths": [
     "/api/v1"
   ], 
-  "passthrough": [
+  "passthroughs": [
     "/api/v1/healthcheck"
   ]
 }

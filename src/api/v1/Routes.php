@@ -19,14 +19,14 @@ class Routes
      *
      * @var array
      */
-    protected $path;
+    protected $paths;
 
     /**
      * API paths to passthrough authentication.
      *
      * @var array
      */
-    protected $passthrough;
+    protected $passthroughs;
 
     /**
      * Routes constructor.
@@ -43,8 +43,8 @@ class Routes
         );
 
         // Set values
-        $this->path = $data['path'];
-        $this->passthrough = $data['passthrough'];
+        $this->paths = $data['paths'];
+        $this->passthroughs = $data['passthroughs'];
     }
 
     /**
@@ -52,9 +52,9 @@ class Routes
      *
      * @return array
      */
-    public function getPath(): array 
+    public function getPaths(): array
     {
-        return $this->path;
+        return $this->paths;
     }
 
     /**
@@ -62,8 +62,8 @@ class Routes
      *
      * @return array
      */
-    public function getPassthrough(): array 
+    public function getPassthroughs(): array
     {
-        return $this->passthrough;
+        return $this->passthroughs;
     }
 }
