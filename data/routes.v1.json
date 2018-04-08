@@ -3,6 +3,7 @@
     "/api/v1"
   ], 
   "passthroughs": [
-    "/api/v1/healthcheck"
+    "/api/v1/healthcheck",
+    "/api/v1/auth"
   ]
 }

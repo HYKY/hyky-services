@@ -18,210 +18,322 @@ use HYKY\Core\Salt;
 /**
  * Services : API\Models\Entity\Users\User
  * ----------------------------------------------------------------------
- * User entity.
- * 
+ * User account entity.
+ *
  * @package     API\Models\Entity\Users
  * @author      HYKY team <we@hyky.games>
  * @copyright   2018 HYKY team
  * @since       0.0.1
- * 
+ *
  * @Entity
  * @Table(name="user")
  * @HasLifecycleCallbacks
  */
-class User extends BaseEntity 
+class User extends BaseEntity
 {
     // Properties
     // ------------------------------------------------------------------
-
+    
     /**
-     * Username/login name.
+     * Username, unique, only alphanumeric and underscore characters.
      *
      * @var string
      * @Column(type="string",length=128,unique=true)
      */
     protected $username;
-
+    
     /**
-     * Hashed password
+     * Password.
      *
      * @var string
      * @Column(type="string",length=128)
      */
     protected $password;
-
+    
     /**
-     * E-mail address.
+     * E-mail address, unique.
      *
      * @var string
      * @Column(type="string",length=255,unique=true)
      */
     protected $email;
-
+    
     /**
-     * If this user's profile is public or not.
+     * Public/private visibility flag.
      *
-     * @var bool 
+     * @var bool
      * @Column(type="boolean",nullable=false)
      */
     protected $is_public = true;
-
+    
     // Relationships
     // ------------------------------------------------------------------
     
     /**
-     * Attributes assigned to this user.
+     * Collection of attributes assigned to this user.
      *
      * @var Collection
-     * @OneToMany(targetEntity="API\Models\Entity\Users\UserAttribute",mappedBy="user")
+     * @OneToMany(
+     *     targetEntity="API\Models\Entity\Users\UserAttribute",
+     *     mappedBy="user"
+     * )
      */
     protected $attributes;
     
     /**
-     * User role.
+     * Collection of groups this user is assigned to.
+     *
+     * @var Collection
+     * @ManyToMany(
+     *     targetEntity="API\Models\Entity\Users\UserGroup",
+     *     inversedBy="users"
+     * )
+     * @JoinTable(
+     *     name="user_groups_list",
+     *     joinColumns={
+     *          @JoinColumn(
+     *              name="user_id",
+     *              referencedColumnName="id"
+     *          )
+     *     },
+     *     inverseJoinColumns={
+     *          @JoinColumn(
+     *              name="group_id",
+     *              referencedColumnName="id"
+     *          )
+     *     }
+     * )
+     */
+    protected $groups;
+    
+    /**
+     * User role assigned to this account. Used to check for permissions.
      *
      * @var UserRole
-     * @ManyToOne(targetEntity="API\Models\Entity\Users\UserRole",inversedBy="users")
+     * @ManyToOne(
+     *     targetEntity="API\Models\Entity\Users\UserRole",
+     *     inversedBy="users"
+     * )
      * @JoinColumn(name="role_id",referencedColumnName="id")
      */
     protected $role;
-
+    
     // Constructor
     // ------------------------------------------------------------------
-
+    
     /**
      * User constructor.
      */
-    public function __construct() 
+    public function __construct()
     {
         // Set collections
         $this->attributes = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
     
     // Getters
     // ------------------------------------------------------------------
-
+    
     /**
-     * Retrieves the username.
+     * Retrieve the username.
      *
      * @return string
      */
-    public function getUsername(): string 
+    public function getUsername(): string
     {
         return $this->username;
     }
     
     /**
-     * Retrieves the hashed password.
+     * Retrieve the password.
      *
      * @return string
      */
-    public function getPassword(): string 
+    public function getPassword(): string
     {
         return $this->password;
     }
-
+    
     /**
-     * Retrieves the e-mail address.
+     * Retrieve the e-mail address.
      *
      * @return string
      */
-    public function getEmail(): string 
+    public function getEmail(): string
     {
         return $this->email;
     }
-
+    
     /**
-     * Returns the public profile status.
+     * Retrieve the visibility status.
      *
      * @return bool
      */
-    public function getIsPublic(): bool 
+    public function getIsPublic(): bool
     {
         return $this->is_public;
     }
-
+    
     /**
-     * Returns all data for this user as an associative array, for use 
-     * with JSON Web Token payloads.
+     * Returns the collection of attributes assigned to this user.
+     *
+     * @return Collection
+     */
+    public function getAttributes(): Collection
+    {
+        return $this->attributes;
+    }
+    
+    /**
+     * Returns the attributes as an associative array with the attribute name
+     * as the key.
      *
      * @return array
      */
-    public function getTokenPayload(): array 
+    public function getAttributesArray(): array
+    {
+        $attr = [];
+        /** @var UserAttribute $attribute */
+        foreach ($this->attributes as $attribute) {
+            $attr[$attribute->getName()] = $attribute->getValue();
+        }
+        return $attr;
+    }
+    
+    /**
+     * Returns a collection of groups this user's assigned to.
+     *
+     * @return Collection
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+    
+    /**
+     * Returns an associative array where the key is the group's slug and
+     * the value its name.
+     *
+     * @return array
+     */
+    public function getGroupsArray(): array
+    {
+        $groups = [];
+        /** @var UserGroup $group */
+        foreach ($this->groups as $group) {
+            $groups[$group->getSlug()] = $group->getName();
+        }
+        return $groups;
+    }
+    
+    /**
+     * Returns the role assigned to this user.
+     *
+     * @return UserRole
+     */
+    public function getRole(): UserRole
+    {
+        return $this->role;
+    }
+    
+    /**
+     * Returns the data necessary to build the JSON Web Token payload.
+     *
+     * IMPORTANT: STILL NEEDS OPTIMIZATION!
+     *
+     * @return array
+     */
+    public function getTokenPayload(): array
     {
         $data = $this->toArray();
-
-        // DO NOT RETURN PASSWORD
+        
+        // DO NOT RETURN PASSWORD, EVER
         unset($data['password']);
-
+        
+        // Set attribute and group arrays
+        $data['attributes'] = $this->getAttributesArray();
+        $data['groups'] = $this->getGroupsArray();
+        
         return $data;
     }
     
     // Setters
     // ------------------------------------------------------------------
-
+    
     /**
-     * Sets the username, when trying to set up a new username for a user 
-     * that's already registered, throws an error.
+     * Sets the username, is still not set.
      *
-     * @param string $username 
+     * If set, throws an exception.
+     *
+     * @param string $username
      * @return $this
      * @throws \Exception
      */
-    public function setUsername(string $username) 
+    public function setUsername(string $username)
     {
-        if ($this->username !== null && $this->username !== '') {
-            throw new \Exception('Username cannot be changed', 412);
+        if (!$this->username) {
+            $this->username = $username;
+        } else {
+            throw new \Exception('You cannot change your username.', 401);
         }
-        $this->username = $username;
         return $this;
     }
-
+    
     /**
-     * Updates the password only if not empty.
+     * Sets the password.
      *
      * @param string $password
      * @return $this
      */
-    public function setPassword(string $password) 
+    public function setPassword(string $password)
     {
         if (trim($password) !== '') {
             $this->password = \password_hash(
-                $password, 
+                trim($password),
                 PASSWORD_DEFAULT
-            ).'.'.Salt::get();
+            )."§".Salt::get();
         }
         return $this;
     }
-
+    
     /**
-     * Updates the e-mail address.
+     * Sets the e-mail address. Validation must occur before this method is
+     * executed.
      *
      * @param string $email
      * @return $this
      */
-    public function setEmail(string $email) 
+    public function setEmail(string $email)
     {
-        if ($email !== '' && is_string($email)) {
-            $this->email = $email;
-        }
+        $this->email = $email;
         return $this;
     }
-
+    
     /**
-     * Updates public visibility status.
+     * Sets public visibility status.
      *
-     * @param boolean $is_public 
+     * @param bool $is_public
      * @return $this
      */
-    public function setIsPublic(bool $is_public) 
+    public function setIsPublic(bool $is_public)
     {
         $this->is_public = $is_public;
         return $this;
     }
     
     /**
-     * Sets the user role associated with the user.
+     * Toggles public visibility status.
+     *
+     * @return $this
+     */
+    public function toggleIsPublic()
+    {
+        $this->is_public = !$this->is_public;
+        return $this;
+    }
+    
+    /**
+     * Assigns a role to this user.
      *
      * @param UserRole $role
      * @return $this
@@ -231,33 +343,63 @@ class User extends BaseEntity
         $this->role = $role;
         return $this;
     }
-
+    
     // Collection Managers
     // ------------------------------------------------------------------
-
+    
     /**
-     * Adds an attribute to the user's collection.
+     * Adds attribute to user.
      *
-     * @param UserAttribute $attribute 
+     * @param UserAttribute $attribute
      * @return $this
      */
-    public function addAttribute(UserAttribute $attribute) 
+    public function addAttribute(UserAttribute $attribute)
     {
         $this->attributes[] = $attribute;
         return $this;
     }
-
+    
     /**
-     * Removes a user attribute from the collection.
+     * Removes an attribute from this user.
      *
-     * @param string $attr_name
+     * @param string $attribute_name
      * @return $this
      */
-    public function removeAttribute(string $attr_name) 
+    public function removeAttribute(string $attribute_name)
     {
-        foreach ($this->attributes as $attr) {
-            if ($attr->getName() === $attr_name) {
+        /** @var UserAttribute $attribute */
+        foreach ($this->attributes as $attribute) {
+            if ($attribute->getName() === $attribute_name) {
                 $this->attributes->removeElement($attribute);
+            }
+        }
+        return $this;
+    }
+    
+    /**
+     * Assigns this user to a group.
+     *
+     * @param UserGroup $group
+     * @return $this
+     */
+    public function addGroup(UserGroup $group)
+    {
+        $this->groups[] = $group;
+        return $this;
+    }
+    
+    /**
+     * Unassigns this user to a group.
+     *
+     * @param string $group_name
+     * @return $this
+     */
+    public function removeGroup(string $group_name)
+    {
+        /** @var UserGroup $group */
+        foreach ($this->groups as $group) {
+            if ($group->getName() === $group_name) {
+                $this->groups->removeElement($group);
             }
         }
         return $this;

@@ -13,24 +13,31 @@ use HYKY\Core\BaseDateEntity;
 /**
  * Services : API\Models\Entity\Users\UserPermission
  * ----------------------------------------------------------------------
- * Handles user permission types.
- * 
+ * Represents a single user role permission
+ *
+ * Permissions are just simple strings, which identify what the `UserRole`
+ * assigned to it can do.
+ *
+ * Usually, roles have collections of one or more permissions.
+ *
  * @package     API\Models\Entity\Users
  * @author      HYKY team <we@hyky.games>
  * @copyright   2018 HYKY team
  * @since       0.0.1
- * 
+ *
  * @Entity
  * @Table(name="user_permission")
  * @HasLifecycleCallbacks
  */
-class UserPermission extends BaseDateEntity 
+class UserPermission extends BaseDateEntity
 {
     // Properties
     // ------------------------------------------------------------------
-
+    
     /**
      * Permission name.
+     *
+     * Use descriptive names, please!
      *
      * @var string
      * @Column(type="string",length=128,unique=true)
@@ -38,7 +45,7 @@ class UserPermission extends BaseDateEntity
     protected $name;
     
     /**
-     * Permission slug.
+     * Permission slug, derived from the name.
      *
      * @var string
      * @Column(type="string",length=128,unique=true)
@@ -47,22 +54,25 @@ class UserPermission extends BaseDateEntity
     
     // Relationships
     // ------------------------------------------------------------------
-
+    
     /**
-     * Roles associated with this permission.
+     * Collection of user roles this permissions is assigned to.
      *
      * @var Collection
-     * @ManyToMany(targetEntity="API\Models\Entity\Users\UserRole",mappedBy="permissions")
+     * @ManyToMany(
+     *     targetEntity="API\Models\Entity\Users\UserRole",
+     *     mappedBy="permissions"
+     * )
      */
     protected $roles;
-
+    
     // Constructor
     // ------------------------------------------------------------------
-
+    
     /**
      * UserPermission constructor.
      */
-    public function __construct() 
+    public function __construct()
     {
         // Set collections
         $this->roles = new ArrayCollection();
@@ -70,29 +80,29 @@ class UserPermission extends BaseDateEntity
     
     // Getters
     // ------------------------------------------------------------------
-
+    
     /**
      * Returns the name.
      *
      * @return string
      */
-    public function getName(): string 
+    public function getName(): string
     {
         return $this->name;
     }
-
+    
     /**
      * Returns the slug.
      *
      * @return string
      */
-    public function getSlug(): string 
+    public function getSlug(): string
     {
         return $this->slug;
     }
     
     /**
-     * Returns the collection of roles associated with this permission.
+     * Returns a collection of user roles this permission is assigned to.
      *
      * @return Collection
      */
@@ -100,29 +110,45 @@ class UserPermission extends BaseDateEntity
     {
         return $this->roles;
     }
+    
+    /**
+     * Returns an associative array of roles this permission is assigned to,
+     * with the role's slug as the key.
+     *
+     * @return array
+     */
+    public function getRolesArray(): array
+    {
+        $roles = [];
+        /** @var UserRole $role */
+        foreach ($this->roles as $role) {
+            $roles[$role->getSlug()] = $role->getName();
+        }
+        return $roles;
+    }
 
     // Setters
     // ------------------------------------------------------------------
-
+    
     /**
      * Sets the name.
      *
-     * @param string $name 
+     * @param string $name
      * @return $this
      */
-    public function setName(string $name) 
+    public function setName(string $name)
     {
         $this->name = $name;
         return $this;
     }
-
+    
     /**
      * Sets the slug.
      *
-     * @param string $slug 
+     * @param string $slug
      * @return $this
      */
-    public function setSlug(string $slug) 
+    public function setSlug(string $slug)
     {
         $this->slug = $slug;
         return $this;
@@ -130,16 +156,33 @@ class UserPermission extends BaseDateEntity
 
     // Collection Managers
     // ------------------------------------------------------------------
-
+    
     /**
-     * Associates a role with this permission.
+     * Assigns this permission to a user role.
      *
      * @param UserRole $role
      * @return $this
      */
-    public function addRole(UserRole $role) 
+    public function addRole(UserRole $role)
     {
         $this->roles[] = $role;
+        return $this;
+    }
+    
+    /**
+     * Unassigns this permission from the user role.
+     *
+     * @param string $role_name
+     * @return $this
+     */
+    public function removeRole(string $role_name)
+    {
+        /** @var UserRole $role */
+        foreach ($this->roles as $role) {
+            if ($role->getName() === $role_name) {
+                $this->roles->removeElement($role);
+            }
+        }
         return $this;
     }
 }

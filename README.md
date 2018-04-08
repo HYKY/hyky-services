@@ -40,8 +40,10 @@ For reference, here are all the current dependencies:
 - tuupola/slim-jwt-auth `v2.3+`
 - vlucas/phpdotenv `v2.4+`
 
-These are the development dependencies (not really used):
+These are the development dependencies:
 - phpunit/phpunit `v6.5+`
+
+There will be a documentation for this project very soon, which will depend on `node.js`.
 
 -----
 
@@ -53,9 +55,12 @@ These are the development dependencies (not really used):
 - Copy `.env.example` into `.env` and set all the data to your current setup;
 - Run `schema-update.bat` (windows) or `php vendor\bin\doctrine orm-schema-tool:update --force` (linux);
   - _You should do this every time you change something in the `api\model\entity` folder;
+- If you still didn't initialize the user data, run `bootstrap-data.bat`;
+  - This script initializes the basic user roles, permissions, groups and users from the data inside `data\bootstrap`, customize the data according to your needs;
+  - Initial user data: **Username:** `admin` / **Password:** `admin`
 - Serve the contents of the `public` folder;
 
-_More and better instructions coming up in the next episode!_
+_More and better instructions coming up in the next episode! (A bit delayed, but someday...maybe...)_
 
 -----
 

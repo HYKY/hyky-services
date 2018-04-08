@@ -6,18 +6,16 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
-use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use HYKY\Core\BaseDateEntity;
+use HYKY\Core\BaseEntity;
 
 /**
- * Services : API\Models\Entity\Users\UserRole
+ * Services : API\Models\Entity\Users\UserGroup
  * ----------------------------------------------------------------------
- * Represents a single user role. A user can have only a single role assigned
- * to it.
+ * User group entity.
+ *
+ * A user can be assigned to one or more groups.
  *
  * @package     API\Models\Entity\Users
  * @author      HYKY team <we@hyky.games>
@@ -25,68 +23,74 @@ use HYKY\Core\BaseDateEntity;
  * @since       0.0.1
  *
  * @Entity
- * @Table(name="user_role")
+ * @Table(name="user_group")
  * @HasLifecycleCallbacks
  */
-class UserRole extends BaseDateEntity
+class UserGroup extends BaseEntity
 {
     // Properties
     // ------------------------------------------------------------------
     
     /**
-     * Role name.
+     * Group name.
      *
      * @var string
-     * @Column(type="string",length=128,unique=true)
+     * @Column(type="string",length=128,nullable=false,unique=true)
      */
     protected $name;
     
     /**
-     * Role slug.
+     * Group slug.
      *
      * @var string
-     * @Column(type="string",length=128,unique=true)
+     * @Column(type="string",length=128,nullable=false,unique=true)
      */
     protected $slug;
     
     /**
-     * Role description.
+     * Group short description.
+     *
+     * @var string
+     * @Column(type="string",length=255,nullable=true)
+     */
+    protected $description;
+    
+    /**
+     * Group image file name
      *
      * @var string
      * @Column(type="string",length=128,nullable=true)
      */
-    protected $description;
+    protected $image = null;
+    
+    /**
+     * Public visibility status.
+     *
+     * @var bool
+     * @Column(type="boolean",nullable=false)
+     */
+    protected $is_public = true;
+    
+    /**
+     * Group protection status.
+     *
+     * Protected groups can only be edited by administrators.
+     *
+     * @var bool
+     * @Column(type="boolean",nullable=false)
+     */
+    protected $is_protected = false;
     
     // Relationships
     // ------------------------------------------------------------------
     
     /**
-     * Collection of permissions allowed to this role.
+     * Collection of users assigned to this group.
      *
      * @var Collection
      * @ManyToMany(
-     *     targetEntity="API\Models\Entity\Users\UserPermission",
-     *     inversedBy="roles"
-     * )
-     * @JoinTable(
-     *     name="user_role_permission",
-     *     joinColumns={
-     *          @JoinColumn(name="role_id",referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *          @JoinColumn(name="permission_id",referencedColumnName="id")
-     *     }
-     * )
-     */
-    protected $permissions;
-    
-    /**
-     * Collection of users this role's assigned to.
-     *
-     * @var Collection
-     * @OneToMany(
      *     targetEntity="API\Models\Entity\Users\User",
-     *     mappedBy="role"
+     *     mappedBy="groups"
      * )
      */
     protected $users;
@@ -95,12 +99,11 @@ class UserRole extends BaseDateEntity
     // ------------------------------------------------------------------
     
     /**
-     * UserRole constructor.
+     * UserGroup constructor.
      */
     public function __construct()
     {
-        // Set collections
-        $this->permissions = new ArrayCollection();
+        // Set collection
         $this->users = new ArrayCollection();
     }
     
@@ -138,33 +141,37 @@ class UserRole extends BaseDateEntity
     }
     
     /**
-     * Returns a collection of permissions assigned to this role.
+     * Retrieve the image file name.
      *
-     * @return Collection
+     * @return string|null
      */
-    public function getPermissions(): Collection
+    public function getImage(): string
     {
-        return $this->permissions;
+        return $this->image;
     }
     
     /**
-     * Returns an associative array with the permission slug as the key and
-     * name as value.
+     * Returns public visibility status.
      *
-     * @return array
+     * @return bool
      */
-    public function getPermissionsArray(): array
+    public function getIsPublic(): bool
     {
-        $permissions = [];
-        /** @var UserPermission $permission */
-        foreach ($this->permissions as $permission) {
-            $permissions[$permission->getSlug()] = $permission->getName();
-        }
-        return $permissions;
+        return $this->is_public;
     }
     
     /**
-     * Returns a collection of users this role's assigned to.
+     * Retrieve the protected status.
+     *
+     * @return bool
+     */
+    public function getIsProtected(): bool
+    {
+        return $this->is_protected;
+    }
+    
+    /**
+     * Returns a collection of users assigned to this group..
      *
      * @return Collection
      */
@@ -193,7 +200,7 @@ class UserRole extends BaseDateEntity
     // ------------------------------------------------------------------
     
     /**
-     * Set the name.
+     * Sets the name.
      *
      * @param string $name
      * @return $this
@@ -205,7 +212,7 @@ class UserRole extends BaseDateEntity
     }
     
     /**
-     * Set the slug.
+     * Sets the slug.
      *
      * @param string $slug
      * @return $this
@@ -217,7 +224,7 @@ class UserRole extends BaseDateEntity
     }
     
     /**
-     * Set the description.
+     * Sets the short description.
      *
      * @param string $description
      * @return $this
@@ -228,40 +235,47 @@ class UserRole extends BaseDateEntity
         return $this;
     }
     
+    /**
+     * Sets the image file name.
+     *
+     * @param string $image
+     * @return $this
+     */
+    public function setImage(string $image)
+    {
+        $this->image = $image;
+        return $this;
+    }
+    
+    /**
+     * Sets the public visibility status.
+     *
+     * @param bool $is_public
+     * @return $this
+     */
+    public function setIsPublic(bool $is_public)
+    {
+        $this->is_public = $is_public;
+        return $this;
+    }
+    
+    /**
+     * Sets the protection status.
+     *
+     * @param bool $is_protected
+     * @return $this
+     */
+    public function setIsProtected(bool $is_protected)
+    {
+        $this->is_protected = $is_protected;
+        return $this;
+    }
+    
     // Collection Managers
     // ------------------------------------------------------------------
     
     /**
-     * Add a permission to this role's collection.
-     *
-     * @param UserPermission $permission
-     * @return $this
-     */
-    public function addPermission(UserPermission $permission)
-    {
-        $this->permissions[] = $permission;
-        return $this;
-    }
-    
-    /**
-     * Removes a permission from this role's collection.
-     *
-     * @param string $permission_name
-     * @return $this
-     */
-    public function removePermission(string $permission_name)
-    {
-        /** @var UserPermission $permission */
-        foreach ($this->permissions as $permission) {
-            if ($permission->getName() === $permission_name) {
-                $this->permissions->removeElement($permission);
-            }
-        }
-        return $this;
-    }
-    
-    /**
-     * Assigns this role to a user.
+     * Assigns this user to this group.
      *
      * @param User $user
      * @return $this
@@ -273,7 +287,7 @@ class UserRole extends BaseDateEntity
     }
     
     /**
-     * Unassigns this role from the user.
+     * Unassigns a user from this group.
      *
      * @param string $username
      * @return $this

@@ -11,36 +11,42 @@ use Ramsey\Uuid\Uuid;
 /**
  * Services : HYKY\Core\BaseEntity
  * ----------------------------------------------------------------------
- * Serializable and extendable base entity, defines only the basic fields 
- * most entities use, like the ID and creation/update date.
- * 
- * Inherits and passes down anything from `Mappable`.
- * 
+ * Base entity, serializable and extendable, most entities inherit from
+ * this one.
+ *
+ * Defines only the basic fields commonly used by entities, like ID and
+ * creation/update date.
+ *
+ * Inherits from `Mappable` for easy serialization/JSON conversion.
+ *
  * @package     HYKY\Core
  * @author      HYKY team <we@hyky.games>
  * @copyright   2018 HYKY team
  * @since       0.0.1
  */
-class BaseEntity extends Mappable 
+class BaseEntity extends Mappable
 {
+    // Properties
+    // ------------------------------------------------------------------
+    
     /**
-     * Numeric ID (Primary Key).
-     * 
-     * @var int 
+     * Numeric ID (Primary Key)
+     *
+     * @var int
      * @Id
      * @Column(type="integer")
      * @GeneratedValue
      */
     protected $id;
-
+    
     /**
-     * Unique ID for this entity.
+     * Unique ID (Secondary Key).
      *
      * @var string
      * @Column(type="guid",unique=true)
      */
     protected $uuid;
-
+    
     /**
      * Creation date.
      *
@@ -48,7 +54,7 @@ class BaseEntity extends Mappable
      * @Column(type="datetime")
      */
     protected $created_at;
-
+    
     /**
      * Update date.
      *
@@ -56,148 +62,145 @@ class BaseEntity extends Mappable
      * @Column(type="datetime")
      */
     protected $updated_at;
-
+    
     /**
      * Soft delete status.
-     * 
+     *
      * @var bool
-     * @Column(type="boolean")
+     * @Column(type="boolean",nullable=false)
      */
     protected $deleted = false;
-
+    
     // Getters
     // ------------------------------------------------------------------
-
+    
     /**
-     * Returns the ID
+     * Retrieve the ID.
      *
      * @return int
      */
-    public function getId(): int 
+    public function getId(): int
     {
         return $this->id;
     }
     
     /**
-     * Returns the unique identifier.
+     * Retrieve the unique identifier.
      *
      * @return string
      */
-    public function getUuid(): string 
+    public function getUuid(): string
     {
         return $this->uuid;
     }
-
+    
     /**
-     * Returns the creation date.
+     * Retrieve the creation date.
      *
      * @return string|mixed
      */
-    public function getCreatedAt()   
+    public function getCreatedAt()
     {
         return $this->created_at;
     }
-
+    
     /**
-     * Returns the update date.
+     * Retrieve the updated date.
      *
      * @return string|mixed
      */
-    public function getUpdatedAt()  
+    public function getUpdatedAt()
     {
         return $this->updated_at;
     }
-
+    
     /**
-     * Returns the soft delete status.
+     * Retrieve deletion status.
      *
      * @return bool
      */
-    public function getDeleted(): bool 
+    public function getDeleted(): bool
     {
         return $this->deleted;
     }
-
+    
     // Setters
     // ------------------------------------------------------------------
-
+    
     /**
-     * Sets the soft delete status.
+     * Sets soft delete status.
      *
-     * @param boolean $deleted 
-     *      Soft delete status 
-     * @return $this 
+     * @param bool $deleted
+     * @return $this
      */
-    public function setDeleted(bool $deleted) 
+    public function setDeleted(bool $deleted)
     {
         $this->deleted = ($deleted === true);
         return $this;
     }
-
+    
     /**
-     * Toggles the soft delete status value.
+     * Toggles soft delete status on/off.
      *
-     * @return $this 
+     * @return $this
      */
-    public function toggleDeleted() 
+    public function toggleDeleted()
     {
         $this->deleted = !$this->deleted;
         return $this;
     }
-
-    // Protected Setters
+    
+    // Protected setters
     // ------------------------------------------------------------------
-
+    
     /**
-     * Sets the creation date.
+     * Sets creation date.
      *
-     * @param \DateTime $date 
-     *      DateTime instance to be set
-     * @return $this 
+     * @param \DateTime $date
+     * @return $this
      */
-    protected function setCreatedAt(\DateTime $date) 
+    protected function setCreatedAt(\DateTime $date)
     {
         $this->created_at = $date;
         return $this;
     }
-
+    
     /**
-     * Sets the update date.
+     * Sets update date.
      *
-     * @param \DateTime $date 
-     *      DateTime instance to be set
-     * @return $this 
+     * @param \DateTime $date
+     * @return $this
      */
-    protected function setUpdatedAt(\DateTime $date) 
+    protected function setUpdatedAt(\DateTime $date)
     {
         $this->updated_at = $date;
         return $this;
     }
-
-    // Lifecycle Callbacks
+    
+    // Lifecycle callbacks
     // ------------------------------------------------------------------
-
+    
     /**
-     * Runs on insert only, defines a random UUID for this entity.
+     * Runs only when inserting data, defines a random UUID for this entity.
      *
      * @return void
      * @PrePersist
      */
-    public function defineUuid() 
+    public function defineUuid()
     {
         $uuid = Uuid::uuid4();
         $this->uuid = $uuid;
     }
-
+    
     /**
-     * Sets the created and updated dates on an insert. If updating, it 
-     * will set only the updated date.
-     * 
+     * Sets creation and update dates on this entity. When updating, only
+     * the updated date will be set.
+     *
      * @return void
      * @PrePersist
      * @PreUpdate
      */
-    public function updateTimestamps() 
+    public function updateTimeStamps()
     {
         $this->setUpdatedAt(new \DateTime('now'));
         if ($this->getCreatedAt() === null) {

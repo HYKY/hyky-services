@@ -1,0 +1,22 @@
+{
+  "name": "hyky-services",
+  "version": "1.0.0",
+  "description": "Documentation for the HYKY Services API",
+  "main": "index.js",
+  "directories": {
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HYKY/hyky-services.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HYKY/hyky-services/issues"
+  },
+  "homepage": "https://github.com/HYKY/hyky-services#readme"
+}

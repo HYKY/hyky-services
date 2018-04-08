@@ -1,0 +1,20 @@
+[
+  {
+    "username": "admin",
+    "password": "admin",
+    "email": "test@localhost.com",
+    "attributes": {
+      "f_name": "John",
+      "m_name": "D.",
+      "l_name": "Doe",
+      "birth": "19/07/1974",
+      "image": "",
+      "twitter": "hykyteam"
+    },
+    "role": "Super Administrator",
+    "groups": [
+      "Administrators",
+      "Users"
+    ]
+  }
+]

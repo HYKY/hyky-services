@@ -1,33 +1,33 @@
 <?php
 namespace API\Models\Entity\Users;
 
-use HYKY\Core\BaseEntity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
+use HYKY\Core\BaseEntity;
 
 /**
  * Services : API\Models\Entity\Users\UserToken
  * ----------------------------------------------------------------------
  * User token entity.
- * 
- * @package     API\Models\Entity\Users\UserToken
+ *
+ * @package     API\Models\Entity\Users
  * @author      HYKY team <we@hyky.games>
  * @copyright   2018 HYKY team
  * @since       0.0.1
- * 
+ *
  * @Entity
  * @Table(name="user_token")
  * @HasLifecycleCallbacks
  */
-class UserToken extends BaseEntity 
+class UserToken extends BaseEntity
 {
     // Properties
     // ------------------------------------------------------------------
-
+    
     /**
      * Token payload.
      *
@@ -35,30 +35,30 @@ class UserToken extends BaseEntity
      * @Column(type="text",nullable=false)
      */
     protected $token;
-
+    
     /**
      * Expiration date as a UNIX timestamp.
      *
      * @var int
      * @Column(type="integer",nullable=false)
      */
-    protected $expires;
-
+    protected $expires_at;
+    
     /**
-     * Validity status.
+     * Token validity status.
      *
      * @var bool
      * @Column(type="boolean",nullable=false)
      */
-    protected $is_valid = true;
+    protected $is_valid;
     
     // Relationships
     // ------------------------------------------------------------------
     
     /**
-     * User assigned to this token.
+     * User account this token belongs to.
      *
-     * @var User 
+     * @var User
      * @ManyToOne(targetEntity="API\Models\Entity\Users\User")
      * @JoinColumn(name="user_id",referencedColumnName="id")
      */
@@ -66,93 +66,93 @@ class UserToken extends BaseEntity
     
     // Getters
     // ------------------------------------------------------------------
-
+    
     /**
-     * Returns the token.
+     * Retrieves the token.
      *
      * @return string
      */
-    public function getToken(): string 
+    public function getToken(): string
     {
         return $this->token;
     }
-
+    
     /**
-     * Returns expiration date.
+     * Retrieves expiration date.
      *
-     * @return integer
+     * @return int
      */
-    public function getExpires(): int 
+    public function getExpiresAt(): int
     {
-        return $this->expires;
+        return $this->expires_at;
     }
-
+    
     /**
-     * Returns validation status.
+     * Retrieves validity status for the token.
      *
-     * @return boolean
+     * @return bool
      */
-    public function getIsValid(): bool 
+    public function getIsValid(): bool
     {
         return $this->is_valid;
     }
-
+    
     /**
      * Returns the user associated with this token.
      *
      * @return User
      */
-    public function getUser(): User 
+    public function getUser(): User
     {
         return $this->user;
     }
-
+    
     // Setters
     // ------------------------------------------------------------------
-
+    
     /**
-     * Sets the user token data.
+     * Sets the token payload value.
      *
      * @param string $token
      * @return $this
      */
-    public function setToken(string $token) 
+    public function setToken(string $token)
     {
         $this->token = $token;
         return $this;
     }
-
+    
     /**
-     * Sets expiration date.
+     * Sets the expiration date.
      *
-     * @param integer $expires
+     * @param int $expires_at
      * @return $this
      */
-    public function setExpires(int $expires) 
+    public function setExpiresAt(int $expires_at)
     {
-        $this->expires = $expires;
+        $this->expires_at = $expires_at;
         return $this;
     }
-
+    
     /**
-     * Sets validity status.
+     * Sets the validity status.
      *
-     * @param integer $is_valid
+     * @param bool $is_valid
      * @return $this
      */
-    public function setIsValid(int $is_valid) 
+    public function setIsValid(bool $is_valid)
     {
         $this->is_valid = $is_valid;
         return $this;
     }
-
+    
     /**
      * Assigns this token to a user.
      *
      * @param User $user
      * @return $this
      */
-    public function setUser(User $user) 
+    public function setUser(User $user)
     {
         $this->user = $user;
         return $this;

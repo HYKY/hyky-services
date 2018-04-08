@@ -5,8 +5,8 @@ This project was brought by **HYKY Team**, a collective of developers engaged in
 
 ### HYKY Team
 
-- **Fabio Y. Goto** ([fabio@hyky.games][0]) | São Paulo, 🇧🇷 |  _Development + Planning_
-- **Robert Rüdiger** ([robert@hyky.games][1]) | Prenzlau, 🇩🇪 | _Development + Planning_
+- **Fabio Y. Goto** ([fabio@hyky.games][0]) | São Paulo, BR |  _Development + Planning_
+- **Robert Rüdiger** ([robert@hyky.games][1]) | Prenzlau, DE | _Development + Planning_
 
 ### Contributors
 
