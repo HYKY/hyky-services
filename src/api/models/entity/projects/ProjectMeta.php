@@ -1,40 +1,37 @@
 <?php
-namespace API\Models\Entity\Users;
+namespace API\Models\Entity\Projects;
 
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
-use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use HYKY\Core\BaseDateEntity;
 
 /**
- * Services : API\Models\Entity\Users\UserAttribute
+ * Services : API\Models\Entity\Projects\ProjectMeta
  * ----------------------------------------------------------------------
- * User attribute entity, represents a single attribute.
+ * Handles project meta in an EAV model, in the same way `UserAttribute`
+ * works for `User`, as to extend the length of the table in a "virtual" way.
  *
- * A user can have one or more attributes in a `Collection`.
+ * A project can have one or more meta data in a `Collection`.
  *
- * @package     API\Models\Entity\Users
+ * @package     API\Models\Entity\Projects
  * @author      HYKY team <we@hyky.games>
  * @copyright   2018 HYKY team
  * @since       0.0.1
  *
  * @Entity
- * @Table(name="user_attribute")
+ * @Table(name="project_meta")
  * @HasLifecycleCallbacks
  */
-class UserAttribute extends BaseDateEntity
+class ProjectMeta extends BaseDateEntity
 {
     // Properties
     // ------------------------------------------------------------------
     
     /**
-     * Attribute name.
-     *
-     * IMPORTANT:
-     * Only lowercase letters and underscores!
+     * Meta data name.
      *
      * @var string
      * @Column(type="string",length=128,nullable=false)
@@ -42,7 +39,18 @@ class UserAttribute extends BaseDateEntity
     protected $name;
     
     /**
-     * Attribute value.
+     * Meta data slug.
+     *
+     * IMPORTANT:
+     * Only lowercase letters and underscores!
+     *
+     * @var string
+     * @Column(type="string",length=128,nullable=false)
+     */
+    protected $slug;
+    
+    /**
+     * Meta data value.
      *
      * @var string
      * @Column(type="string",length=255,nullable=true)
@@ -53,16 +61,15 @@ class UserAttribute extends BaseDateEntity
     // ------------------------------------------------------------------
     
     /**
-     * User associated with the attribute.
+     * Project this meta data is assigned to.
      *
-     * @var User
+     * @var Project
      * @ManyToOne(
-     *     targetEntity="API\Models\Entity\Users\User",
-     *     inversedBy="attributes"
+     *     targetEntity="API\Models\Entity\Projects\Project",
+     *     inversedBy="meta"
      * )
-     * @JoinColumn(name="user_id",referencedColumnName="id")
      */
-    protected $user;
+    protected $project;
     
     // Getters
     // ------------------------------------------------------------------
@@ -78,6 +85,16 @@ class UserAttribute extends BaseDateEntity
     }
     
     /**
+     * Retrieve the slug.
+     *
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+    
+    /**
      * Retrieve the value.
      *
      * @return string
@@ -88,20 +105,20 @@ class UserAttribute extends BaseDateEntity
     }
     
     /**
-     * Retrieve the user associated with this attribute.
+     * Returns the project this data is assigned to.
      *
-     * @return User
+     * @return Project
      */
-    public function getUser(): User
+    public function getProject(): Project
     {
-        return $this->user;
+        return $this->project;
     }
     
     // Setters
     // ------------------------------------------------------------------
     
     /**
-     * Sets the attribute name.
+     * Sets the name.
      *
      * @param string $name
      * @return $this
@@ -113,7 +130,19 @@ class UserAttribute extends BaseDateEntity
     }
     
     /**
-     * Sets the attribute value.
+     * Sets the slug.
+     *
+     * @param string $slug
+     * @return $this
+     */
+    public function setSlug(string $slug)
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+    
+    /**
+     * Sets the value.
      *
      * @param string $value
      * @return $this
@@ -125,14 +154,14 @@ class UserAttribute extends BaseDateEntity
     }
     
     /**
-     * Assigns this attribute to a user.
+     * Assigns this data to a project.
      *
-     * @param User $user
+     * @param Project $project
      * @return $this
      */
-    public function setUser(User $user)
+    public function setProject(Project $project)
     {
-        $this->user = $user;
+        $this->project = $project;
         return $this;
     }
 }
