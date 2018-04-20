@@ -67,14 +67,6 @@ class City extends BaseProfileEntity
      */
     protected $pinned_order = 0;
     
-    /**
-     * Old database ID.
-     *
-     * @var int
-     * @Column(type="integer",nullable=true)
-     */
-    protected $old_id;
-    
     // Relationships
     // ------------------------------------------------------------------
     
@@ -203,16 +195,6 @@ class City extends BaseProfileEntity
     }
     
     /**
-     * Retrieves the old database ID.
-     *
-     * @return int
-     */
-    public function getOldId(): int
-    {
-        return $this->old_id;
-    }
-    
-    /**
      * Retrieves a collection of addresses located in this city.
      *
      * @return Collection
@@ -331,18 +313,6 @@ class City extends BaseProfileEntity
     public function setPinnedOrder(int $pinned_order)
     {
         $this->pinned_order = $pinned_order;
-        return $this;
-    }
-    
-    /**
-     * Sets the old database ID.
-     *
-     * @param int $old_id
-     * @return $this
-     */
-    public function setOldId(int $old_id)
-    {
-        $this->old_id = $old_id;
         return $this;
     }
     

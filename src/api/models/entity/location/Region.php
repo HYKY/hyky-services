@@ -51,14 +51,6 @@ class Region extends BaseProfileEntity
      */
     protected $abbr;
     
-    /**
-     * Old database ID.
-     *
-     * @var int
-     * @Column(type="integer",nullable=true)
-     */
-    protected $old_id;
-    
     // Relationships
     // ------------------------------------------------------------------
     
@@ -121,16 +113,6 @@ class Region extends BaseProfileEntity
     }
     
     /**
-     * Retrieves the old database ID.
-     *
-     * @return int
-     */
-    public function getOldId(): int
-    {
-        return $this->old_id;
-    }
-    
-    /**
      * Retrieves the country this region is located.
      *
      * @return Country
@@ -174,18 +156,6 @@ class Region extends BaseProfileEntity
     public function setAbbr(string $abbr)
     {
         $this->abbr = $abbr;
-        return $this;
-    }
-    
-    /**
-     * Sets the old database ID.
-     *
-     * @param int $old_id
-     * @return $this
-     */
-    public function setOldId(int $old_id)
-    {
-        $this->old_id = $old_id;
         return $this;
     }
     

@@ -63,14 +63,6 @@ class Landmark extends BaseProfileEntity
      */
     protected $old_address;
     
-    /**
-     * Old database ID.
-     *
-     * @var int
-     * @Column(type="integer",nullable=true)
-     */
-    protected $old_id;
-    
     // Relationships
     // ------------------------------------------------------------------
     
@@ -152,16 +144,6 @@ class Landmark extends BaseProfileEntity
     }
     
     /**
-     * Retrieves the old database ID.
-     *
-     * @return int
-     */
-    public function getOldId(): int
-    {
-        return $this->old_id;
-    }
-    
-    /**
      * Retrieves the address this landmark is associated with.
      *
      * @return Address
@@ -229,18 +211,6 @@ class Landmark extends BaseProfileEntity
     public function setOldAddress(string $old_address)
     {
         $this->old_address = $old_address;
-        return $this;
-    }
-    
-    /**
-     * Sets the old database ID.
-     *
-     * @param int $old_id
-     * @return $this
-     */
-    public function setOldId(int $old_id)
-    {
-        $this->old_id = $old_id;
         return $this;
     }
     
