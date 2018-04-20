@@ -5,7 +5,7 @@ namespace HYKY\Core;
  * Services : HYKY\Core\Mappable
  * ----------------------------------------------------------------------
  * Implements `\JsonSerializable`, which allows some lazy object-to-array
- * convertion and, to a certain extent, JSON serialization of the object.
+ * conversion and, to a certain extent, JSON serialization of the object.
  *
  * Properties must be `public` or `protected` to be serialized.
  *

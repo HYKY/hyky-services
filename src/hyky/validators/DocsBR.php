@@ -15,6 +15,33 @@ namespace HYKY\Validators;
 class DocsBR
 {
     /**
+     * Formats a Brazilian Legal Entity Registry (CNPJ) number.
+     *
+     * @param string $cnpj
+     *      Number to format
+     * @return string
+     */
+    public static function cnpjFormat(string $cnpj): string 
+    {
+        if ($cnpj === null || $cnpj === "") return false;
+
+        // Sanitize
+        $cnpj = preg_replace("/\D/", "", $cnpj);
+        
+        // Check length
+        if (strlen($cnpj) > 14) return false;
+        if (strlen($cnpj) < 14) $cnpj = sprintf("%014s", $cnpj);
+
+        // Format
+        $cnpj = preg_replace(
+            "/^([0-9]{2})([0-9]{3})([0-9]{3})([0-9]{4})([0-9]{2})$/", 
+            "$1.$2.$3-$4/$5", 
+            $cnpj
+        );
+        return $cnpj;
+    }
+
+    /**
      * Validates the Brazilian Legal Entity Registry (CNPJ) number.
      *
      * @param string $cnpj
@@ -58,6 +85,33 @@ class DocsBR
         if ((int) $cnpj[13] !== $val) return false;
         
         return true;
+    }
+    
+    /**
+     * Formats a Brazilian Natural Person Registry (CPF) number.
+     *
+     * @param string $cpf 
+     *      Number to format
+     * @return string
+     */
+    public static function cpfFormat(string $cpf): string 
+    {
+        if ($cpf === null || $cpf === "") return false;
+
+        // Sanitize
+        $cpf = preg_replace("/\D/", "", $cpf);
+
+        // Check length
+        if (strlen($cnpj) > 11) return false;
+        if (strlen($cnpj) < 11) $cnpj = sprintf("%011s", $cnpj);
+
+        // Format
+        $cpf = preg_replace(
+            "/^([0-9]{3})([0-9]{3})([0-9]{3})([0-9]{2})$/", 
+            "$1.$2.$3-$4", 
+            $cpf
+        );
+        return $cpf;
     }
     
     /**
