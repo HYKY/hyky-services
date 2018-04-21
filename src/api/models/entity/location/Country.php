@@ -112,7 +112,7 @@ class Country extends BaseProfileEntity
      *
      * @var Collection
      * @OneToMany(
-     *     targetEntity="API\Models\Entity\Location\City",
+     *     targetEntity="API\Models\Entity\Location\State",
      *     mappedBy="country"
      * )
      */
@@ -123,7 +123,7 @@ class Country extends BaseProfileEntity
      *
      * @var Collection
      * @OneToMany(
-     *     targetEntity="API\Models\Entity\Location\City",
+     *     targetEntity="API\Models\Entity\Location\Region",
      *     mappedBy="country"
      * )
      */

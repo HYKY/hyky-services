@@ -72,7 +72,7 @@ class Address extends BaseEntity
      *
      * @var District
      * @ManyToOne(
-     *     targetEntity="API\Models\Entity\Location\City",
+     *     targetEntity="API\Models\Entity\Location\District",
      *     inversedBy="addresses"
      * )
      * @JoinColumn(name="district_id",referencedColumnName="id")

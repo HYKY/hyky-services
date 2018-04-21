@@ -83,7 +83,7 @@ class Landmark extends BaseProfileEntity
      *
      * @var City
      * @ManyToOne(
-     *     targetEntity="API\Models\Entity\Location\Address",
+     *     targetEntity="API\Models\Entity\Location\City",
      *     inversedBy="landmarks"
      * )
      * @JoinColumn(name="city_id",referencedColumnName="id")
