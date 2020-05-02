@@ -1,5 +1,4 @@
-HYKY : Services
-===============
+# HYKY | Services
 
 > A PHP backend for basic APIs using Slim and Doctrine, inspired by [YAPI][0] and other small projects. We've got doughnuts! :doughnut: (not really)
 
@@ -9,7 +8,7 @@ The idea is to have most of the hard work done for some very basic stuff, like a
 
 This project is a twin project with the **[HYKY : Manage][1]** project, which aims to offer a basic administrator structure to manage/consume the API.
 
------
+----------------------------------------------------------------------
 
 ## Requirements
 
@@ -22,7 +21,7 @@ This project is a twin project with the **[HYKY : Manage][1]** project, which ai
 
 It's not required, but we strongly advise you to configure a vanity domain for local development, since it might help in development/testing.
 
------
+----------------------------------------------------------------------
 
 ## Dependencies
 
@@ -45,9 +44,9 @@ These are the development dependencies:
 
 There will be a documentation for this project very soon, which will depend on `node.js`.
 
------
+----------------------------------------------------------------------
 
-## How To Run
+## How To
 
 #### TL;DR
 - Clone;
@@ -62,16 +61,21 @@ There will be a documentation for this project very soon, which will depend on `
 
 _More and better instructions coming up in the next episode! (A bit delayed, but someday...maybe...)_
 
------
+----------------------------------------------------------------------
 
 ## Authors
 
-This project's developed mainly by the **[HYKY Team][hyky]** collective. See `AUTHORS.md` for more information and, maybe, some contact info.
+See `AUTHORS.md` for more information.
 
------
+----------------------------------------------------------------------
 
-_©2018 HYKY Team_
+## License
+
+This project is licensed under the `MIT License`. See `LICENSE.md` for more details on the subjects of the license.
+
+----------------------------------------------------------------------
+
+_©2018-2020 HYKY Team_
 
 [0]: https://github.com/yuigoto/yx-php-yapi
 [1]: https://github.com/HYKY/hyky-manage
-[hyky]: https://hyky.games
